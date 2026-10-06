@@ -60,9 +60,7 @@ class JobController extends Controller
         $skills = Skill::orderBy('name')->get();
 
         $company = Auth::user()->company;
-        $cities = $company && $company->country_id
-            ? City::where('country_id', $company->country_id)->orderBy('name')->get()
-            : City::orderBy('name')->get();
+        $cities = City::orderBy('name')->get();
 
         return Inertia::render('Employer/JobForm', [
             'categories' => $categories,
@@ -138,9 +136,7 @@ class JobController extends Controller
 
         $categories = JobCategory::orderBy('name')->get();
         $countries = Country::orderBy('name')->get();
-        $cities = $job->country_id
-            ? City::where('country_id', $job->country_id)->orderBy('name')->get()
-            : City::orderBy('name')->get();
+        $cities = City::orderBy('name')->get();
         $skills = Skill::orderBy('name')->get();
         $selectedSkills = $job->skills->pluck('id')->toArray();
 

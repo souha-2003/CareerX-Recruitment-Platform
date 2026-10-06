@@ -69,8 +69,17 @@ class JobApplicationController extends Controller
             'status'       => 'applied',
         ]);
 
-        $user = Auth::user();
-        $user->notify(new \App\Notifications\ApplicationStatusChangedNotification($application, 'applied'));
+        $application->loadMissing(['jobPost.company.users', 'jobPost.creator', 'profile.user']);
+        $employers = collect();
+        if ($application->jobPost?->creator) {
+            $employers->push($application->jobPost->creator);
+        }
+        if ($application->jobPost?->company?->users) {
+            $employers = $employers->merge($application->jobPost->company->users);
+        }
+        foreach ($employers->unique('id') as $employer) {
+            $employer->notify(new \App\Notifications\NewJobApplicationNotification($application));
+        }
 
         return redirect()->back()->with('success', __('You have successfully applied for this job.'));
     }

@@ -32,13 +32,8 @@ class ApplicantController extends Controller
 
         if ($request->filled('search')) {
             $term = '%' . $request->search . '%';
-            $query->where(function ($q) use ($term) {
-                $q->whereHas('profile.user', function ($uq) use ($term) {
-                    $uq->where('name', 'like', $term)
-                       ->orWhere('email', 'like', $term);
-                })->orWhereHas('jobPost', function ($jq) use ($term) {
-                    $jq->where('title', 'like', $term);
-                });
+            $query->whereHas('profile.user', function ($uq) use ($term) {
+                $uq->where('name', 'like', $term);
             });
         }
 
@@ -99,10 +94,6 @@ class ApplicantController extends Controller
 
         if (in_array($application->status, ['applied', 'pending'])) {
             $application->update(['status' => 'reviewed']);
-            $candidateUser = $application->profile?->user;
-            if ($candidateUser) {
-                $candidateUser->notify(new \App\Notifications\ApplicationStatusChangedNotification($application, 'reviewed'));
-            }
         }
 
         $application->load([

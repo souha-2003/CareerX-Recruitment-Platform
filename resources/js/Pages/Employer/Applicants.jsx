@@ -202,7 +202,7 @@ export default function Applicants({
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder={__('Search candidate, email, title...')}
+                placeholder={__('Search by candidate name...')}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#008A7B] focus:ring-1 focus:ring-[#008A7B] transition-all ps-9"
               />
               <Search className="w-4 h-4 text-slate-400 absolute start-3 top-3" />
